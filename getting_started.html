@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting started &mdash; PyStack3D 2024.2 documentation</title>
+  <title>Getting started &mdash; PyStack3D 2025.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -94,7 +94,7 @@
   <section id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
 <p><strong>PyStack3D</strong> was originally designed to process hundreds or even thousands of .tif files forming a 3D stack, stored according to a specific folder structure (see below).
-Since version <strong>2025.1</strong>, it is also possible to process a single (large) multi-frame .tif file. Refer to the section <a class="reference external" href="https://cea-metrocarac.github.io/pystack3d/getting_started.html#single-tif-file-processing">Single .tif File Processing</a> for more details.</p>
+Since version <strong>2025.1</strong>, it is also possible to process a single (large) multi-frame .tif file. Refer to the section <a class="reference external" href="https://cea-metrocarac.github.io/pystack3d/getting_started.html#id3">Single .tif File Processing</a> for more details.</p>
 <section id="project-directory-organization">
 <h2>Project directory organization<a class="headerlink" href="#project-directory-organization" title="Permalink to this heading"></a></h2>
 <p>To be executed, a <strong>PyStack3D</strong> workflow requires both:</p>
@@ -248,7 +248,7 @@ The affected parameters are listed here:</p>
 <section id="id3">
 <h2>Single .tif File Processing<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <p>Processing a single large .tif file without using a .toml file is also supported.</p>
-<p>Here is an example of a step-by-step registration processing on a single processor applied to a .tif file named <em>fname</em></p>
+<p>Here is an example of a step-by-step registration processing on a single processor applied to a .tif file named <em>fname</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pystack3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stack3d</span>
 
 <span class="n">stack</span> <span class="o">=</span> <span class="n">Stack3d</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
