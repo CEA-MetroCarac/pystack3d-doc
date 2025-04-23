@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Background removal &mdash; PyStack3D 2024.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+
+  
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Intensity rescaling" href="intensity_rescaling.html" />
+    <link rel="prev" title="Cropping" href="cropping.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PyStack3D
+              <img src="_static/logo_black.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="params.html">Parameters settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="general.html">General Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cropping.html">Cropping</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Background removal</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intensity_rescaling.html">Intensity rescaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="registration.html">Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="destriping.html">Destriping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resampling.html">Resampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cropping_final.html">Cropping final</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_notes.html">Developers Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">pystack3d</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyStack3D</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="params.html">Parameters settings</a></li>
+      <li class="breadcrumb-item active">Background removal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/bkg_removal.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="background-removal">
+<h1>Background removal<a class="headerlink" href="#background-removal" title="Permalink to this heading"></a></h1>
+<p>Most of the stacks acquisition techniques can produce gray intensity variations due, for instance, to <strong>charging</strong> effects (on low conductive material) or to <strong>shadowing</strong> effects (when imaging an area deep inside the material).</p>
+<p>The <strong>background removal</strong> process step aims at reducing these <strong>large-scale</strong> effects on the images, assuming a polynomial behaviour to be fitted and removed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This fit is realised through the resolution of a minimization problem with a least square algorithm that consists in 2D to:</p>
+<p><em>Given a polynomial basis</em> <span class="math notranslate nohighlight">\([1, x, y, xy, x^2, ...]\)</span>, <em>find the polynom coefficients</em> <span class="math notranslate nohighlight">\((a_0, a_1, a_2, a_3, a_4,...)\)</span> <em>such as:</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}{\underset {(x, y)\in \mathbb {RxR} \subset Img}{\operatorname {minimize} }}\quad &amp;\|Img(x, y) - a_0.1 + a_1.x + a_2.y + a_3.xy + a_4.x^2 + ...\|^{2}\end{aligned}\]</div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/bkg_removal_3D.png"><img alt="_images/bkg_removal_3D.png" src="_images/bkg_removal_3D.png" style="width: 100%;" /></a>
+</figure>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/bkg_removal.png"><img alt="_images/bkg_removal.png" src="_images/bkg_removal.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Illustration of the <strong>bkg_removal</strong> process step in the <a class="reference external" href="https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py">synthetic test case</a>.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">bkg_removal</span><span class="p">]</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="c1">#poly_basis = &quot;1 + x*y*z&quot;</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">cross_terms</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">skip_factors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">threshold_min</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1">#threshold_max = 10.</span>
+<span class="c1">#weight_func = &quot;HuberT&quot;</span>
+<span class="c1">#preserve_avg = true</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dim</span></code> parameter defines the dimension of the problem to solve (2D or 3D):</p>
+<ul class="simple">
+<li><p>with  <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">=</span> <span class="pre">3</span></code> a single resolution is performed (with a potentially high CPU cost) on the entire stack to determine the polynom coefficients. <em>(The cost resolution can be significantly decreased using the</em> <code class="docutils literal notranslate"><span class="pre">skip_factor</span></code> <em>parameter, see below).</em></p></li>
+<li><p>with  <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">=</span> <span class="pre">2</span></code> the resolution is performed slice by slice, leading to different polynom coefficients from one slice to another.</p></li>
+</ul>
+<p>The 2D or 3D polynomial basis used to perform the fit can be defined in two ways:</p>
+<ul class="simple">
+<li><p>from <code class="docutils literal notranslate"><span class="pre">poly_basis</span></code> which defines the polynomial basis definition <strong>explicitly</strong>, term by term, from a literal expression</p></li>
+<li><p>from <code class="docutils literal notranslate"><span class="pre">orders</span></code> and <code class="docutils literal notranslate"><span class="pre">cross_terms</span></code> which define the basis <strong>implicitly</strong> in function to the order associated to each variable (x, y) in 2D or (x, y, z) in 3D.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Taking into account <strong>cross terms</strong> in the definition of the polynomial basis can prove crucial for achieving the desired fit. For instance, a background thought to be in the form of ‘xyz’ may actually have its minimum following a definition in ‘(x-a)(y-b)(z-c)’ in the reference basis used by the minimization procedure.</p>
+</div>
+<p>Since the images sizes and the number of frames could be big, the <code class="docutils literal notranslate"><span class="pre">skip_factors</span></code> parameter allows to significantly reduced the array to consider in the fitting processing.
+<em>(Setting a skip_factors = [10, 10, 10] on a stack of size ~1000x1000x1000 seems to be a good compromise between accuracy, RAM occupancy and time execution).</em></p>
+<p>When a skip factor is applied, the values taken into account are the ones corresponding to the indices positions. Using <code class="docutils literal notranslate"><span class="pre">skip_averaging</span> <span class="pre">=</span> <span class="pre">true</span></code> realizes a local averaging instead. <em>(Note that no real benefit has been observed practically when activating this averaging).</em></p>
+<p>Images may include regions that are not impacted (or slightly impacted) by the background effects like holes in a porous medium (characterized by very low values) or saturated pixels (characterized by very high values).
+For this reason, a mask to exclude values below <code class="docutils literal notranslate"><span class="pre">threshold_min</span></code> and above <code class="docutils literal notranslate"><span class="pre">threshold_max</span></code> can be defined to be applied during the fit processing.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">weight_func</span></code> parameter (”<strong>HuberT</strong>”, “<strong>Hampel</strong>” or “<strong>None</strong>”) enables to specify (or not) a weight function used to determine and exclude outliers during the least squares problem resolution.
+See  the <a class="reference external" href="https://www.statsmodels.org/stable/rlm.html">RLM documentation</a> for more details.
+(Default value is “HuberT”).</p>
+<p>At last, the <code class="docutils literal notranslate"><span class="pre">preserve_avg</span></code> parameter enables to preserve the average between the input and the output data. The average preservation is suitable only when <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">=</span> <span class="pre">3</span></code>.
+(Default value is False).</p>
+<section id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading"></a></h2>
+<p>The special plotting related to the <strong>bkg_removal</strong> process step generates images in the dedicated <strong>outputs</strong>  folder that are named <strong>coefs.png</strong>, <strong>stats_X.png</strong> and <strong>stats_Y.png</strong>.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/bkg_removal_coefs.png"><img alt="_images/bkg_removal_coefs.png" src="_images/bkg_removal_coefs.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>coefs.png</strong> gives the polynomial basis coefficients.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="_images/bkg_removal_stats_X.png"><img alt="_images/bkg_removal_stats_X.png" src="_images/bkg_removal_stats_X.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>stats_X.png</strong> displays statistics along the ‘X’ axis.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="_images/bkg_removal_stats_Y.png"><img alt="_images/bkg_removal_stats_Y.png" src="_images/bkg_removal_stats_Y.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text"><strong>stats_Y.png</strong> displays statistics along the ‘Y’ axis.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cropping.html" class="btn btn-neutral float-left" title="Cropping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="intensity_rescaling.html" class="btn btn-neutral float-right" title="Intensity rescaling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-2025, The PyStack3D development team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
