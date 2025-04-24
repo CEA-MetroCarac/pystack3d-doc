@@ -54,7 +54,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#workflow-execution">Workflow execution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">Single .tif File Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Single .tif file processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#outputs">Outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
@@ -94,7 +94,7 @@
   <section id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
 <p><strong>PyStack3D</strong> was originally designed to process hundreds or even thousands of .tif files forming a 3D stack, stored according to a specific folder structure (see below).
-Since version <strong>2025.1</strong>, it is also possible to process a single (large) multi-frame .tif file. Refer to the section <a class="reference external" href="https://cea-metrocarac.github.io/pystack3d/getting_started.html#id3">Single .tif File Processing</a> for more details.</p>
+Since version <strong>2025.1</strong>, it is also possible to process a single (large) multi-frame .tif file. Refer to the section <a class="reference external" href="https://cea-metrocarac.github.io/pystack3d/getting_started.html#id3">Single .tif file processing</a> for more details.</p>
 <section id="project-directory-organization">
 <h2>Project directory organization<a class="headerlink" href="#project-directory-organization" title="Permalink to this heading"></a></h2>
 <p>To be executed, a <strong>PyStack3D</strong> workflow requires both:</p>
@@ -222,7 +222,7 @@ The affected parameters are listed here:</p>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">input_name</span></code> corresponds either to the <strong>project directory pathname</strong> or to the <code class="docutils literal notranslate"><span class="pre">params.toml</span></code> in which the project directory pathname has to be defined via the <code class="docutils literal notranslate"><span class="pre">input_dirname</span></code> parameter.</p>
-<p><code class="docutils literal notranslate"><span class="pre">process_steps</span></code> refers either to a single process step or to a list of process steps or can be omitted leading to the execution of the full process steps defined in the <a href="#id1"><span class="problematic" id="id2">``</span></a>params.toml`:</p>
+<p><code class="docutils literal notranslate"><span class="pre">process_steps</span></code> refers either to a single process step or to a list of process steps or can be omitted leading to the execution of the full process steps defined in the <code class="docutils literal notranslate"><span class="pre">params.toml</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># execute only the &#39;cropping&#39; process step</span>
 <span class="n">stack</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">process_steps</span><span class="o">=</span><span class="s2">&quot;cropping&quot;</span><span class="p">,</span> <span class="n">nproc</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 
@@ -245,8 +245,8 @@ The affected parameters are listed here:</p>
 </pre></div>
 </div>
 </section>
-<section id="id3">
-<h2>Single .tif File Processing<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h2>Single .tif file processing<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>Processing a single large .tif file without using a .toml file is also supported.</p>
 <p>Here is an example of a step-by-step registration processing on a single processor applied to a .tif file named <em>fname</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pystack3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stack3d</span>
@@ -268,10 +268,10 @@ The affected parameters are listed here:</p>
 <p>Each process steps returns <strong>specific</strong> and <strong>standard</strong> outputs (data and figures) in the related process step <strong>outputs</strong> directory.</p>
 <p><strong>Specific</strong> outputs are related to each process steps. They are described in each of the process steps sections hereafter (if existing).</p>
 <p><strong>Standard</strong> outputs consist in the statistics (min, max, mean) on gray values evolution along the stack axis (z-axis, by convention) <strong>before</strong> and <strong>after</strong> the process step execution. For the ‘after’ values, the statistics without and with data reformatting compatible with the input data format are plotted. Indeed, some process steps may modify the data type (typically from integer to float) and/or generate data outside the range of authorized data values. <em>(This could happen for instance in the</em> <strong>bkg_removal</strong> <em>process step when subtracting the background that could generate negative or positive overflowed values)</em>.</p>
-<figure class="align-center" id="id4">
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="_images/bkg_removal_stats.png"><img alt="_images/bkg_removal_stats.png" src="_images/bkg_removal_stats.png" style="width: 80%;" /></a>
 <figcaption>
-<p><span class="caption-text">Example of statistics returned by the <strong>bkg_removal</strong> process step in the <a class="reference external" href="https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py">synthetic test case</a>.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+<p><span class="caption-text">Example of statistics returned by the <strong>bkg_removal</strong> process step in the <a class="reference external" href="https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py">synthetic test case</a>.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
